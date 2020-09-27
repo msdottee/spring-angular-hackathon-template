@@ -1,0 +1,31 @@
+<clr-alert [clrAlertType]="'success'" [clrAlertAppLevel]="true" [clrAlertClosable]="false">
+    <clr-alert-item>
+        <span class="alert-text">
+            We are currently optimizing our personnel to improve service delivery.
+        </span>
+    </clr-alert-item>
+</clr-alert>
+<header class="header-6">
+    <div class="branding">
+        <span class="title">
+            <clr-icon shape="rack-server"></clr-icon>
+            Initech
+        </span>
+    </div>
+    <div class="header-nav">
+        <a [routerLink]="['home']" [routerLinkActive]="['active']" class="nav-link nav-text">Home</a>
+        <a [routerLink]="['consulting']" [routerLinkActive]="['active']" class="nav-link nav-text">Consulting</a>
+    </div>
+    <div class="header-actions">
+        <clr-dropdown>
+            <button class="nav-text" clrDropdownTrigger aria-label="open user profile">
+                <clr-icon shape="employee"></clr-icon>
+                Michael Bolton
+                <clr-icon shape="caret down"></clr-icon>
+            </button>
+            <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+                <a [routerLink]="['/']" clrDropdownItem><clr-icon shape="logout"></clr-icon> Log out</a>
+            </clr-dropdown-menu>
+        </clr-dropdown>
+    </div>
+</header>
