@@ -1,6 +1,7 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "6.0.0"
-    id "io.micronaut.application" version '1.0.3'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'io.micronaut.application' version '1.0.3'
+    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 version "0.1"
@@ -22,21 +23,22 @@ micronaut {
 
 dependencies {
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
-    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    annotationProcessor("io.micronaut.jaxrs:micronaut-jaxrs-processor")
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
     compileOnly("org.graalvm.nativeimage:svm")
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut:micronaut-runtime")
     implementation("javax.annotation:javax.annotation-api")
     implementation("io.micronaut:micronaut-http-client")
-    implementation("io.swagger.core.v3:swagger-annotations")
     implementation("io.micronaut:micronaut-management")
+    implementation("io.micronaut.jaxrs:micronaut-jaxrs-server")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     implementation("io.micronaut.data:micronaut-data-jdbc")
     implementation("io.micronaut.security:micronaut-security")
     implementation("io.micronaut.security:micronaut-security-oauth2")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.postgresql:postgresql")
+    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.21'
     testImplementation(platform("org.testcontainers:testcontainers-bom:1.14.3"))
     testRuntimeOnly("org.testcontainers:postgresql")
 }
@@ -47,6 +49,25 @@ java {
     targetCompatibility = JavaVersion.toVersion('11')
 }
 
+swaggerSources {
+    server {
+        inputFile = file("$rootDir/openapi.yaml")
+        code {
+            language = 'jaxrs-spec'
+        }
+    }
+    client {
+        inputFile = file("$rootDir/openapi.yaml")
+        code {
+            language = 'java'
+        }
+    }
+}
 
+compileJava.dependsOn swaggerSources.server.code
+sourceSets.main.java.srcDir "${swaggerSources.server.code.outputDir}/src/main/java"
+sourceSets.main.resources.srcDir "${swaggerSources.server.code.outputDir}/src/main/resources"
 
-
+compileTestJava.dependsOn swaggerSources.client.code
+sourceSets.test.java.srcDir "${swaggerSources.client.code.outputDir}/src/main/java"
+sourceSets.test.resources.srcDir "${swaggerSources.client.code.outputDir}/src/main/resources"
