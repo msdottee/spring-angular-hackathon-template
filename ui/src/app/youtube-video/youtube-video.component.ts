@@ -13,8 +13,8 @@ export class YoutubeVideoComponent implements OnInit {
   videoUrl: string;
 
   @Input()
-  set videoId(_videoId) {
-    this.videoUrl = new URL(_videoId, "https://www.youtube-nocookie.com/embed/").toString();
+  set videoId(youTubeVideoId) {
+    this.videoUrl = new URL(youTubeVideoId, 'https://www.youtube-nocookie.com/embed/').toString();
   }
 
   ngOnInit(): void {
